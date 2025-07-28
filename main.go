@@ -1,28 +1,31 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
 	println("Hello welcome to go conference here in 2023")
-	// let us learn variables here
-	// var name = "John doe"
-	var firstName string
-	var lastName string
-	var numberOffTicket int
-	var email string
-	remainTickets := 100
+	arraysName := []string{"John Doe", "Jack man ", "Bruzlli Khan"}
+	result, result2 := PrintSum(arraysName)
+	fmt.Println("Surname is ", result, result2)
+	// initalizing the variable for the while loops here
+	x := 0
+	for x < 10 {
+		fmt.Println(x)
+		x++
 
-	fmt.Println("Enter your first name please:")
-	fmt.Scan(&firstName)
-	fmt.Println("Enter your last name please:")
-	fmt.Scan(&lastName)
-	fmt.Println("Enter your Emails please:")
-	fmt.Scan(&email)
-	fmt.Println("Enter number of tickets you want to buy please::")
-	fmt.Scan(&numberOffTicket)
+	}
+}
 
-	fmt.Printf("Thank you %v %v for buying %v tickets you will receive emails confirmations at %v\n", firstName, lastName, numberOffTicket, email)
-	remain := remainTickets - numberOffTicket
-	fmt.Println("Remaining tickets are :", remain)
-
+func PrintSum(a []string) (c string, b []string) {
+	holdSurname := ""
+	firstNames := []string{}
+	for _, v := range a {
+		firstName := strings.Fields(v) //we used fields here because we want to split the string on white spaces
+		firstNames = append(firstNames, firstName[0])
+		holdSurname += string(v[0])
+	}
+	return holdSurname, firstNames
 }
