@@ -1,12 +1,9 @@
 package services
 
-import "GOLANG/entity"
-
-type VideoService interface {
-	Greet() string
-	SaveVideo(video entity.Video)  // this just saaves the video to local storage woth specified paths
-	FindAllVideos() []entity.Video // this is return slices of videos for storage or from databse
-}
-type VideoServices struct {
-	Videos []entity.Video
+// let us creates a struct to represent the encoming Albums data
+type Album struct {
+	ID     string  `json:"id"`
+	Title  string  `json:"title"`
+	Artist string  `json:"artist"`
+	Price  float64 `json:"price"`
 }
