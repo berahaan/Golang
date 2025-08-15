@@ -57,13 +57,45 @@ func GetAlbumByID(c *gin.Context) {
 	})
 }
 
+// fetching the all albums here
 func GetAlbums(c *gin.Context) {
 	fmt.Println("GetAlbums called ")
 	c.JSON(200, albums)
 }
+
+// introduce any one thatb access my routes explicitly
 func GetIntroduce(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "Hello this is from Port 8080 local host server",
+	})
+}
+
+// updates the albums
+
+func UpdateAlbums(c *gin.Context) {
+	// let us extract id from requests
+	var UpdateAlbums models.Album
+	id := c.Param("id")
+	if err := c.BindJSON(&UpdateAlbums); err != nil {
+		c.JSON(404, gin.H{
+			"Message": "Error while serializing Json",
+		})
+	}
+	for index, album := range albums {
+		if album.ID == id {
+			// we need to update it
+			albums[index].ID = UpdateAlbums.ID
+			albums[index].Artist = UpdateAlbums.Artist
+			albums[index].Price = UpdateAlbums.Price
+			albums[index].Title = UpdateAlbums.Title
+			c.JSON(200, gin.H{
+				"message": "Successfully added",
+				"updated": albums[index],
+			})
+		}
+	}
+	c.JSON(404, gin.H{
+		"message": "Albums to be Updated not found now ...",
 	})
 }
 
