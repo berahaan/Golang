@@ -73,7 +73,7 @@ func GetIntroduce(c *gin.Context) {
 
 // updates the albums
 
-func UpdateAlbums(c *gin.Context) {
+func UpdateAlbum(c *gin.Context) {
 	// let us extract id from requests
 	var UpdateAlbums models.Album
 	id := c.Param("id")
