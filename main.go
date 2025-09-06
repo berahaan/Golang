@@ -4,6 +4,7 @@ import (
 	"GOLANG/routers"
 	"fmt"
 
+	// "github.com/joho/godotenv"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,5 +14,4 @@ func main() {
 	routers.RegisterRoutes(server)
 	fmt.Println("Server running on port 8080")
 	server.Run(":8080")
-
 }

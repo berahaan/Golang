@@ -20,6 +20,7 @@ func RemoveAlbumByID(c *gin.Context) {
 	// let us track the id of the albums
 	id := c.Param("id")
 	found := false
+	// looping through albums
 	for index, album := range albums {
 		if album.ID == id {
 			// now we got the id of albums to be deleted
