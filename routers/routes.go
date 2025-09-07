@@ -1,6 +1,7 @@
 package routers
 
 import (
+	// "GOLANG/handlers"
 	"GOLANG/handlers"
 	"GOLANG/services"
 
@@ -9,9 +10,6 @@ import (
 
 func RegisterRoutes(router *gin.Engine) {
 	router.GET("/", services.GetIntroduce)
-	router.GET("/albums", handlers.GetAlbums)
-	router.GET("/albums/:id", handlers.GetAlbumByID)
-	router.POST("/addAlbum", handlers.PostAlbums)
-	router.DELETE("/removeAlbums/:id", handlers.RemoveAlbumByID)
-	router.PUT("/UpdateAlbum/:id", handlers.UpdateAlbums)
+	router.POST("/addusers", handlers.AddUsers)
+
 }
