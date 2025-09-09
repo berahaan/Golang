@@ -11,5 +11,7 @@ import (
 func RegisterRoutes(router *gin.Engine) {
 	router.GET("/", services.GetIntroduce)
 	router.POST("/addusers", handlers.AddUsers)
+	router.GET("/Alhuha", handlers.GetUsers)
+	router.GET("/Alhuha/:id", handlers.GetUserById)
 
 }

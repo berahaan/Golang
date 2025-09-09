@@ -16,9 +16,9 @@ var DB *gorm.DB
 func Connect() {
 
 	if os.Getenv("DATABASE_USER") == "" || os.Getenv("DATABASE_PASSWORD") == "" || os.Getenv("DATABASE_NAME") == "" {
-		fmt.Println("Database Environment is Empty")
+		fmt.Println("Database Environment variables is Empty")
 		return
-	}
+	 }
 
 	dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DATABASE_USER"), os.Getenv("DATABASE_PASSWORD"), os.Getenv("DATABASE_NAME"))
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})

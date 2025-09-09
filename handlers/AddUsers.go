@@ -39,3 +39,27 @@ func AddUsers(c *gin.Context) {
 		"Users":   NewUser,
 	})
 }
+
+func GetUsers(c *gin.Context) {
+	// we need to create a struct models to fetch data
+	var Alhuha []models.Allhuha
+	database.DB.Find(&Alhuha)
+	c.JSON(200, gin.H{
+		"Messages": "Users successfully fetched",
+		"AllUsers": Alhuha,
+	})
+}
+
+// finding specific users by ID
+func GetUserById(c *gin.Context) {
+	// we need to extract a Id from request
+	var Alhuha models.Allhuha
+	Id := c.Param("id")
+	// we need to find uses by this ID
+	result := database.DB.First(&Alhuha, Id)
+	if result.Error != nil {
+		c.JSON(404, gin.H{"error": "User not found"})
+		return
+	}
+	c.JSON(200, Alhuha)
+}
