@@ -21,9 +21,6 @@ func HandleSignup(c *gin.Context) {
 		return
 	}
 
-	// Validate email format (add this validation to your UserInput model if possible)
-	// if !isValidEmail(input.Email) { ... }
-
 	// Check if user already exists
 	var existingUser models.User
 	result := database.DB.Where("email = ?", input.Email).First(&existingUser)
