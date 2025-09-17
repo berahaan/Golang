@@ -1,7 +1,6 @@
 package database
 
 import (
-	"GOLANG/models"
 	"fmt"
 	"log"
 	"os"
@@ -26,7 +25,5 @@ func Connect() {
 		log.Fatal("Failed to connect to databse \n", err)
 	}
 	DB = database
-	DB.AutoMigrate(&models.Album{})
-	DB.AutoMigrate(&models.Allhuha{})
 	fmt.Println("Database Connected Successfully!")
 }

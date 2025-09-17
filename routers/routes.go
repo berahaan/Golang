@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"GOLANG/auth"
 	"GOLANG/handlers"
 	"GOLANG/services"
 
@@ -12,5 +13,6 @@ func RegisterRoutes(router *gin.Engine) {
 	router.POST("/addusers", handlers.AddUsers)
 	router.GET("/Alhuha", handlers.GetUsers)
 	router.GET("/Alhuha/:id", handlers.GetUserById)
+	router.POST("/signup", auth.HandleSignup)
 
 }

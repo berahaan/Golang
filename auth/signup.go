@@ -3,6 +3,7 @@ package auth
 import (
 	"GOLANG/database"
 	"GOLANG/models"
+	"GOLANG/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,6 @@ import (
 
 func HandleSignup(c *gin.Context) {
 	var input models.UserInput
-
 	// Bind and validate input
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -20,15 +20,16 @@ func HandleSignup(c *gin.Context) {
 		})
 		return
 	}
-
+	sanitizedEmail := utils.SanitizeEmail(input.Email)
+	sanitizedPassword := utils.SanitizePassword(input.Password)
 	// Check if user already exists
 	var existingUser models.User
-	result := database.DB.Where("email = ?", input.Email).First(&existingUser)
+	result := database.DB.Where("email = ?", sanitizedEmail).First(&existingUser)
 
 	if result.Error != nil && result.Error != gorm.ErrRecordNotFound {
 		// This handles actual database errors, not just "not found"
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Database error",
+			"error": "Database error" + result.Error.Error(),
 		})
 		return
 	}
@@ -41,7 +42,7 @@ func HandleSignup(c *gin.Context) {
 	}
 
 	// Hash the password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(sanitizedPassword), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to process password",
