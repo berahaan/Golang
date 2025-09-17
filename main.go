@@ -3,7 +3,6 @@ package main
 // just write down a folder name and then follow by package name
 import (
 	"GOLANG/database"
-	"GOLANG/models"
 	"GOLANG/routers"
 	"fmt"
 	"log"
@@ -19,8 +18,6 @@ func main() {
 		return
 	}
 	database.Connect()
-	database.DB.AutoMigrate(&models.Album{})
-	database.DB.AutoMigrate(&models.Allhuha{})
 	server := gin.Default()
 	routers.RegisterRoutes(server)
 	fmt.Println("Server running on port 8080")
