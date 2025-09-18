@@ -12,7 +12,7 @@ import (
 )
 
 func HandleSignup(c *gin.Context) {
-	var input models.UserInput
+	var input models.SignUpInput
 	// Bind and validate input
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
