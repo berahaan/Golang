@@ -1,6 +1,6 @@
 package main
 
-// just write down a folder name and then follow by package name
+// just write down a folder name and then follow by package name for importing purposes
 import (
 	"GOLANG/database"
 	"GOLANG/routers"
@@ -17,7 +17,9 @@ func main() {
 		log.Fatal("Error loading env files")
 		return
 	}
+
 	database.Connect()
+	database.MigrateTables()
 	server := gin.Default()
 	routers.RegisterRoutes(server)
 	fmt.Println("Server running on port 8080")
