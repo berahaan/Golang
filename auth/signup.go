@@ -22,6 +22,11 @@ func HandleSignup(c *gin.Context) {
 	}
 	sanitizedEmail := utils.SanitizeEmail(input.Email)
 	sanitizedPassword := utils.SanitizePassword(input.Password)
+	if !utils.ValidateEmail(sanitizedEmail) {
+		// This CATCHES what client-side missed
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email"})
+		return
+	}
 	// Check if user already exists
 	var existingUser models.User
 	result := database.DB.Where("email = ?", sanitizedEmail).First(&existingUser)
@@ -40,7 +45,14 @@ func HandleSignup(c *gin.Context) {
 		})
 		return
 	}
+	// Validate the Password strenght
 
+	if validate, msg := utils.ValidatePaswordStrength(sanitizedPassword); !validate {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"Message": msg,
+		})
+		return
+	}
 	// Hash the password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(sanitizedPassword), bcrypt.DefaultCost)
 	if err != nil {

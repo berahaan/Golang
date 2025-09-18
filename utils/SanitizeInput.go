@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"github.com/microcosm-cc/bluemonday"
 )
@@ -28,10 +30,43 @@ func SanitizeString(input string) string {
 func SanitizeEmail(email string) string {
 	email = strings.TrimSpace(email)
 	email = SanitizeString(email)
-
 	return email
 }
+func ValidatePaswordStrength(password string) (bool, string) {
+	// we need to check if the passwords have the necessary qualification or the client need to satify the necessary conditions here
+	fmt.Println("Validate passwords ")
+	var hasUpper, hasLower, hasSpecialChar, hasNumber bool
+	if len(password) < 5 {
+		return false, "Password need to be greater than 5 characters "
+	}
+	for _, char := range password {
+		switch {
+		case unicode.IsUpper(char):
+			hasUpper = true
+		case unicode.IsLower(char):
+			hasLower = true
+		case unicode.IsDigit(char):
+			hasNumber = true
+		case unicode.IsPunct(char) || unicode.IsSymbol(char):
+			hasSpecialChar = true
+		}
+	}
+	if !hasUpper {
+		return false, "Password must have at least one Uppercase letter"
+	}
+	if !hasLower {
+		return false, "Password must have at least one Lowercase letter"
+	}
+	if !hasNumber {
+		return false, "password need to have at least one Numbers"
+	}
+	if !hasSpecialChar {
+		return false, "Password need to have at least 1 special characters"
+	}
 
+	return true, ""
+
+}
 func SanitizePassword(password string) string {
 	// Remove whitespace (including newlines, tabs)
 	password = strings.TrimSpace(password)
