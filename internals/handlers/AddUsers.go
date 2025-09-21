@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"GOLANG/database"
-	"GOLANG/models"
+	"GOLANG/internals/database"
+	"GOLANG/internals/models"
 	"log"
 
 	"github.com/gin-gonic/gin"

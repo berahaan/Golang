@@ -1,7 +1,7 @@
 package database
 
 import (
-	"GOLANG/models"
+	"GOLANG/internals/models"
 )
 
 func MigrateTables() {

@@ -1,7 +1,7 @@
 package services
 
 import (
-	"GOLANG/models"
+	"GOLANG/internals/models"
 	"os"
 	"time"
 
@@ -22,7 +22,7 @@ func GenerateJWTtoken(email string, userId int) (string, error) {
 			Issuer:    "Backend by Golang",
 		},
 	}
-	//  Create a token with the Claims
+	//  Create a token with the Claims 2450 4293 1671 3827
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtSecret)
 	if err != nil {
