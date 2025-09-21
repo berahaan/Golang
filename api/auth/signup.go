@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"GOLANG/database"
-	"GOLANG/models"
-	"GOLANG/utils"
+	"GOLANG/internals/database"
+	"GOLANG/internals/models"
+	"GOLANG/pkg/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

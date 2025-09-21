@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"GOLANG/models"
+	"GOLANG/internals/models"
 	"fmt"
 
 	"github.com/gin-gonic/gin"

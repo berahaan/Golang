@@ -2,7 +2,7 @@ package main
 
 // just write down a folder name and then follow by package name for importing purposes
 import (
-	"GOLANG/database"
+	"GOLANG/internals/database"
 	"GOLANG/routers"
 	"fmt"
 	"log"

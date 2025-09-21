@@ -1,9 +1,9 @@
 package routers
 
 import (
-	"GOLANG/auth"
-	"GOLANG/handlers"
-	"GOLANG/services"
+	"GOLANG/api/auth"
+	"GOLANG/internals/handlers"
+	"GOLANG/internals/services"
 
 	"github.com/gin-gonic/gin"
 )
