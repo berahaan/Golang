@@ -18,7 +18,7 @@ func GenerateJWTtoken(userId int) (string, error) {
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
-			Issuer:    "Backend by Golang",
+			Issuer:    "Backend by Birhan",
 		},
 	}
 	//  Create a token with the Claims 2450 4293 1671 3827

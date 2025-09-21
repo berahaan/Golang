@@ -7,6 +7,7 @@ import (
 	"GOLANG/pkg/utils"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -49,6 +50,18 @@ func HandleLoginAuth(c *gin.Context) {
 		})
 		return
 	}
+	// Create a functions to generate and send OTP of 6 digit
+	num := utils.GenerateOTP(6)
+	otp_expires := time.Now().Add(5 * time.Minute)
+	// Store OTP in database along with User ID
+	err := services.StoreOTP(user.ID, num, otp_expires)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"Error": "Failed to store OTP",
+		})
+		return
+	}
+	// Send OTP Emails
 	// generate JWT with claims
 	token, err := services.GenerateJWTtoken(int(user.ID))
 	if err != nil {

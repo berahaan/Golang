@@ -20,7 +20,6 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 type JwtClaims struct {
-	UserId uint   `json:"user_id"`
-	Email  string `json:"email"`
+	UserId uint `json:"user_id"`
 	jwt.RegisteredClaims
 }

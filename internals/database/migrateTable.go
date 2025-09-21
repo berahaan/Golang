@@ -7,4 +7,5 @@ import (
 func MigrateTables() {
 	DB.AutoMigrate(&models.Album{})
 	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.OTP{})
 }
