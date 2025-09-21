@@ -13,6 +13,7 @@ func RegisterRoutes(router *gin.Engine) {
 	router.POST("/addusers", handlers.AddUsers)
 	router.GET("/Alhuha", handlers.GetUsers)
 	router.GET("/Alhuha/:id", handlers.GetUserById)
-	router.POST("/signup", auth.HandleSignup)
+	router.POST("/Signup", auth.HandleSignup)
+	router.POST("/Login", auth.HandleLoginAuth)
 
 }

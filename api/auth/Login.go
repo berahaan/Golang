@@ -5,6 +5,7 @@ import (
 	"GOLANG/internals/models"
 	"GOLANG/internals/services"
 	"GOLANG/pkg/utils"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,7 @@ import (
 
 func HandleLoginAuth(c *gin.Context) {
 	// now we need to take emails and password of a users from clients
+	fmt.Println("Login Endpoint Hit")
 	var LoginInput models.LoginInput
 
 	if err := c.ShouldBindJSON(&LoginInput); err != nil {
@@ -31,7 +33,7 @@ func HandleLoginAuth(c *gin.Context) {
 		})
 		return
 	}
-	// find user by emails
+	// find user by emails and get all information to the user variables
 	var user models.User
 	result := database.DB.Where("email=?", LoginInput.Email).First(&user)
 	if result.Error != nil {
@@ -45,9 +47,10 @@ func HandleLoginAuth(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"Error": "Invalid email or password",
 		})
+		return
 	}
 	// generate JWT with claims
-	token, err := services.GenerateJWTtoken(user.Email, int(user.ID))
+	token, err := services.GenerateJWTtoken(int(user.ID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"Error": " Failed to generate JWT token",

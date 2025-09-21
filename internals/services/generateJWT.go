@@ -8,13 +8,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func GenerateJWTtoken(email string, userId int) (string, error) {
+func GenerateJWTtoken(userId int) (string, error) {
 	var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 	expirationTime := time.Now().Add(24 * time.Minute)
 	//  Create a Claims
 	claims := &models.JwtClaims{
 		UserId: uint(userId),
-		Email:  email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
