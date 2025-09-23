@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"GOLANG/internals/database"
 	"GOLANG/internals/models"
 	"GOLANG/internals/services"
 	"net/http"
@@ -22,7 +23,14 @@ func HandleVerifyOTP(c *gin.Context) {
 		})
 		return
 	}
-	token, err := services.GenerateJWTtoken(int(input.UserId))
+	var user models.User
+	if err := database.DB.First(&user, input.UserId).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Server Error",
+		})
+		return
+	}
+	token, err := services.GenerateJWTtoken(int(user.ID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"Error": " Failed to generate JWT token",
@@ -30,8 +38,12 @@ func HandleVerifyOTP(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"Message": "OTP Verified Successfully",
+		"message": "Login successful",
 		"token":   token,
+		"user": gin.H{
+			"id":    user.ID,
+			"email": user.Email,
+		},
 	})
 
 }

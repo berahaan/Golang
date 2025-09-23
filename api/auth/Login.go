@@ -62,21 +62,7 @@ func HandleLoginAuth(c *gin.Context) {
 		return
 	}
 	// Send OTP Emails
+	// Verify Tokens
 	// generate JWT with claims
-	token, err := services.GenerateJWTtoken(int(user.ID))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"Error": " Failed to generate JWT token",
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Login Successfully",
-		"Token":   token,
-		"User": gin.H{
-			"id":    user.ID,
-			"Email": user.Email,
-		},
-	})
 
 }
