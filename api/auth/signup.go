@@ -3,6 +3,7 @@ package auth
 import (
 	"GOLANG/internals/database"
 	"GOLANG/internals/models"
+	emails "GOLANG/pkg/email"
 	"GOLANG/pkg/utils"
 	"net/http"
 
@@ -75,11 +76,17 @@ func HandleSignup(c *gin.Context) {
 		})
 		return
 	}
-
+	subject := "Welcome to Our Service !"
+	body := "Hello " + input.Email + ",\n\nThank you for signing up ! We are excited to have you on board . \n\n Best regards ,\n Birhan's Team"
+	if err := emails.SendEmailsTo(user.Email, subject, body); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to send emails " + err.Error(),
+		})
+	}
 	// Return success response (consider returning the user ID or email)
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "User created successfully",
-		"user_id": user.ID, // Useful for the client
+		"user_id": user.ID,
 		"email":   user.Email,
 	})
 }

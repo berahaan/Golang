@@ -4,12 +4,14 @@ import (
 	"GOLANG/internals/database"
 	"GOLANG/internals/models"
 	"GOLANG/internals/services"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func HandleVerifyOTP(c *gin.Context) {
+	log.Println("Verify OTP Endpoint Hit")
 	var input models.VerifyOTPInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

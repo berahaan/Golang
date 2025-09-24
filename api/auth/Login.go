@@ -4,6 +4,7 @@ import (
 	"GOLANG/internals/database"
 	"GOLANG/internals/models"
 	"GOLANG/internals/services"
+	emails "GOLANG/pkg/email"
 	"GOLANG/pkg/utils"
 	"fmt"
 	"net/http"
@@ -61,7 +62,18 @@ func HandleLoginAuth(c *gin.Context) {
 		})
 		return
 	}
+	subject := "Your Login OTP Code"
+	body := "Hello, your OTP code is: " + num + "\nIt will expire in 5 minutes."
 	// Send OTP Emails
+	if err := emails.SendEmailsTo(user.Email, subject, body); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to send OTP email" + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"Message": "OTP sent to your emails please check your emails",
+	})
 	// Verify Tokens
 	// generate JWT with claims
 
