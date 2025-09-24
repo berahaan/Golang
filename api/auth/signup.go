@@ -42,7 +42,7 @@ func HandleSignup(c *gin.Context) {
 
 	if result.RowsAffected > 0 {
 		c.JSON(http.StatusConflict, gin.H{
-			"error": "User with this email already exists",
+			"error": "User with this email already exists Please Login instead",
 		})
 		return
 	}
