@@ -3,6 +3,7 @@ package services
 import (
 	"GOLANG/internals/database"
 	"GOLANG/internals/models"
+	"log"
 	"time"
 )
 
@@ -20,6 +21,7 @@ func StoreOTP(User_Id uint, otpNumber string, expTime time.Time) error {
 }
 
 func VerifyOTP(userId uint, code string) bool {
+	log.Println("Verifying OTP for User ID ", userId, "with code ", code)
 	var otp models.OTP
 
 	// 1. Check if OTP exists, not expired, and unused

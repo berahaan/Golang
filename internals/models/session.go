@@ -14,6 +14,6 @@ type OTP struct {
 	Used      bool      `gorm:"default:false" json:"used"`
 }
 type VerifyOTPInput struct {
-	UserId uint   `json:"user_id" binding:"required"`
-	Code   string `json:"code" binding:"required"`
+	UserId uint   `json:"user_id" `
+	Code   string `json:"code"`
 }
