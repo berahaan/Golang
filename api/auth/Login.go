@@ -74,7 +74,5 @@ func HandleLoginAuth(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"Message": "OTP sent to your emails please check your emails",
 	})
-	// Verify Tokens
-	// generate JWT with claims
 
 }

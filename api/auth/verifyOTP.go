@@ -19,9 +19,9 @@ func HandleVerifyOTP(c *gin.Context) {
 		})
 		return
 	}
-	if !services.VerifyOTP(input.UserId, input.Code) {
+	if allowed, messg := services.VerifyOTP(input.UserId, input.Code); !allowed {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid or Expired OTP",
+			"error": "Invalid or Expired OTP" + messg,
 		})
 		return
 	}
