@@ -3,6 +3,7 @@ package services
 import (
 	"GOLANG/internals/database"
 	"GOLANG/internals/models"
+	"log"
 	"time"
 
 	"gorm.io/gorm"
@@ -19,6 +20,7 @@ func (rls *RateLimitServices) CheckOtpAttempts(userId uint, code string) (bool, 
 	var otp models.OTP
 	result := database.DB.Where("user_id=? AND code=?", userId, code).First(&otp)
 	if result.Error != nil {
+		log.Println("CheckOtpAttempts result.Error ", result.Error)
 		return false, "OTP not found"
 	}
 	if time.Now().After(otp.ExpiresAt) {

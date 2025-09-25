@@ -3,17 +3,16 @@ package services
 import (
 	"GOLANG/internals/database"
 	"GOLANG/internals/models"
-	"fmt"
 	"log"
 	"time"
 )
 
 func StoreOTP(User_Id uint, otpNumber string, expTime time.Time) error {
-	checkAttempts := NewOTPService()
-	log.Println("Store OTP")
-	if allowed, message := checkAttempts.CheckOtpAttempts(User_Id, otpNumber); !allowed {
-		return fmt.Errorf("Rate limit exceeded: %s", message)
-	}
+	log.Println("Store OTP hitted ")
+	// checkAttempts := NewOTPService()
+	// if allowed, message := checkAttempts.CheckOtpAttempts(User_Id, otpNumber); !allowed {
+	// 	return fmt.Errorf("Rate limit exceeded: %s", message)
+	// }
 
 	otp := models.OTP{
 		UserID:      User_Id,
