@@ -13,7 +13,7 @@ type OTP struct {
 	ExpiresAt   time.Time `gorm:"not null" json:"expires_at"`
 	Used        bool      `gorm:"default:false" json:"used"`
 	Attempts    int       `gorm:"default:0" json:"attempts"`
-	MaxAttempts int       `gorm:"default:3" json:"max-attempts"`
+	MaxAttempts int       `gorm:"default:3" json:"max_attempts"`
 }
 type VerifyOTPInput struct {
 	UserId uint   `json:"user_id" `
