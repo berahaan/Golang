@@ -31,25 +31,26 @@ func VerifyOTP(userId uint, code string) (bool, string) {
 	if find_user_Result.Error != nil {
 		return false, "User not exists"
 	}
-	result := database.DB.Where("user_id = ? AND used = ? AND expires_at > ?",
-		userId, false, time.Now()).First(&otpRecord)
+	// now check otp attempts
+	isAttempt, messg := ratelimitService.CheckOtpAttempts(userId)
+	if !isAttempt {
+		log.Println("!isAttempt if conditions executed ....")
+		return false, messg
+	}
+	result := database.DB.Where("user_id = ? AND used = ?",
+		userId, false).First(&otpRecord)
 
 	if result.Error != nil {
 		return false, "No active OTP found. Please request a new one."
 	}
 
-	// 2. Check if OTP has already exceeded max attempts
-	if otpRecord.Attempts >= otpRecord.MaxAttempts {
-		return false, "Too many attempts. Please request a new OTP."
-	}
-
-	// 3. Check if OTP is expired
-	if time.Now().After(otpRecord.ExpiresAt) {
-		return false, "OTP has expired. Please request a new one."
-	}
-
-	// 4. Now check if the entered code is CORRECT
+	// 3. Now check if the entered code is CORRECT
 	if otpRecord.Code == code {
+		// 3. Check if OTP is expired
+		log.Println(" otpRecord.Code == code ")
+		if time.Now().After(otpRecord.ExpiresAt) {
+			return false, "OTP has expired. Please request a new one."
+		}
 		// CORRECT CODE - Mark as used and return success
 		result := database.DB.Model(&models.OTP{}).
 			Where("user_id = ? AND code = ? AND used = ?",

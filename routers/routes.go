@@ -12,5 +12,6 @@ func RegisterRoutes(router *gin.Engine) {
 	router.POST("api/auth/signup", auth.HandleSignup)
 	router.POST("api/auth/login", auth.HandleLoginAuth)
 	router.POST("api/auth/verify-otp", auth.HandleVerifyOTP)
+	router.POST("/api/auth/resend-otp", auth.HandleResendOtp)
 
 }

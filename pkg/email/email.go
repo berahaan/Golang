@@ -19,7 +19,7 @@ func SendEmailsTo(to string, subject string, body string) error {
 	d := gomail.NewDialer(os.Getenv("SMTP_HOST"), port, os.Getenv("SMTP_USER"), os.Getenv("SMTP_PASSWORD"))
 
 	if err := d.DialAndSend(mail); err != nil {
-		log.Println("Failed to send email")
+		log.Println("Failed to send email", err.Error())
 		return err
 	}
 	return nil

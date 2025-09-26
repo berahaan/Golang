@@ -4,7 +4,6 @@ import (
 	"GOLANG/internals/database"
 	"GOLANG/internals/models"
 	"log"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -15,31 +14,22 @@ func NewOTPService() *RateLimitServices {
 	return &RateLimitServices{}
 }
 
-func (rls *RateLimitServices) CheckOtpAttempts(userId uint, code string) (bool, string) {
+func (rls *RateLimitServices) CheckOtpAttempts(userId uint) (bool, string) {
+	log.Println("CheckOtpAttempts for user ", userId)
 	var otp models.OTP
 
 	// FIX: Add code to the WHERE clause
-	result := database.DB.Where("user_id = ? AND code = ? AND used = ?",
-		userId, code, false).First(&otp)
+	result := database.DB.Where("user_id = ?",
+		userId).First(&otp)
 
 	if result.Error != nil {
-		log.Println("OTP not found or error:", result.Error)
-		return false, "OTP not found"
-	}
-
-	log.Println("User informations in check otp attempts func Id, attempts, Max attempts",
-		otp.UserID, otp.Attempts, otp.MaxAttempts)
-
-	// Check if OTP is expired
-	if time.Now().After(otp.ExpiresAt) {
-		return false, "OTP has expired"
+		return false, ""
 	}
 
 	// Check if max attempts exceeded
 	if otp.Attempts >= otp.MaxAttempts {
 		return false, "Too many attempts. Please request a new OTP."
 	}
-
 	return true, ""
 }
 
@@ -49,7 +39,7 @@ func (rls *RateLimitServices) IncrementOtpAttempts(userId uint, code string) err
 
 	// FIX: Add code to the WHERE clause to target the specific OTP
 	result := database.DB.Model(&models.OTP{}).
-		Where("user_id = ? AND code = ? AND used = ?", userId, code, false).
+		Where("user_id = ? AND used = ?", userId, false).
 		Update("attempts", gorm.Expr("attempts + ?", 1))
 
 	if result.Error != nil {
