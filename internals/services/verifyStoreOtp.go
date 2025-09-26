@@ -3,6 +3,8 @@ package services
 import (
 	"GOLANG/internals/database"
 	"GOLANG/internals/models"
+	"log"
+	"strconv"
 	"time"
 )
 
@@ -16,50 +18,65 @@ func StoreOTP(User_Id uint, otpNumber string, expTime time.Time) error {
 		MaxAttempts: 3,
 	}
 
-	//  now insert this information to db OTP
+	// now insert this information to db OTP
 	return database.DB.Create(&otp).Error
-
 }
 
 func VerifyOTP(userId uint, code string) (bool, string) {
+	log.Println("VerifyOTP Func", userId, code)
 	ratelimitService := NewOTPService()
+	// 1. First, find the active OTP record for this user
+	var otpRecord, find_user models.OTP
+	find_user_Result := database.DB.Where("user_id=?", userId).First(&find_user)
+	if find_user_Result.Error != nil {
+		return false, "User not exists"
+	}
+	result := database.DB.Where("user_id = ? AND used = ? AND expires_at > ?",
+		userId, false, time.Now()).First(&otpRecord)
 
-	// 1. Check Rate Limit and Get Active OTP Record
-	otpRecord, errMsg := ratelimitService.CheckOtpAttempts(userId)
-
-	if otpRecord == nil {
-		// No active OTP found for the user
-		return false, "Invalid or expired OTP. " + errMsg
+	if result.Error != nil {
+		return false, "No active OTP found. Please request a new one."
 	}
 
-	// 2. Handle Attempts/Expiration Exhausted (from CheckOtpAttempts)
-	if errMsg != "" {
-		return false, errMsg
+	// 2. Check if OTP has already exceeded max attempts
+	if otpRecord.Attempts >= otpRecord.MaxAttempts {
+		return false, "Too many attempts. Please request a new OTP."
 	}
 
-	// 3. Check if the entered code is WRONG
-	if otpRecord.Code != code {
-		// The code is WRONG. Increment the attempt counter for the *valid* OTP record.
-		ratelimitService.IncrementOtpAttempts(userId, otpRecord.Code)
+	// 3. Check if OTP is expired
+	if time.Now().After(otpRecord.ExpiresAt) {
+		return false, "OTP has expired. Please request a new one."
+	}
 
-		// Re-check the attempt count after incrementing
-		if otpRecord.Attempts+1 >= otpRecord.MaxAttempts {
-			return false, "Too many attempts. Please request a new OTP"
+	// 4. Now check if the entered code is CORRECT
+	if otpRecord.Code == code {
+		// CORRECT CODE - Mark as used and return success
+		result := database.DB.Model(&models.OTP{}).
+			Where("user_id = ? AND code = ? AND used = ?",
+				userId, code, false).
+			Update("used", true)
+
+		if result.RowsAffected == 1 {
+			log.Println("✅ OTP verified successfully for user", userId)
+			return true, ""
 		}
-
-		return false, "Invalid Security code."
+		return false, "Failed to mark OTP as used"
 	}
 
-	// 4. ATOMIC VERIFICATION & USAGE (If code is correct and passed initial checks)
-	result := database.DB.Model(&models.OTP{}).
-		Where("user_id = ? AND code = ? AND used = ? AND expires_at > ?",
-			userId, code, false, time.Now()).
-		Update("used", true)
+	// 5. WRONG CODE - Increment attempts
+	log.Println("❌ Wrong OTP attempt for user", userId, "Expected:", otpRecord.Code, "Got:", code)
 
-	if result.RowsAffected == 1 {
-		// SUCCESS: OTP consumed. Do not increment attempts.
-		return true, ""
+	// Increment attempts for this specific OTP
+	incrementErr := ratelimitService.IncrementOtpAttempts(userId, otpRecord.Code)
+	if incrementErr != nil {
+		log.Println("Error incrementing attempts:", incrementErr)
 	}
 
-	return false, "Verification Failed."
+	// Check if this wrong attempt exceeds the limit
+	if otpRecord.Attempts+1 >= otpRecord.MaxAttempts {
+		return false, "Too many attempts. Please request a new OTP."
+	}
+
+	remainingAttempts := otpRecord.MaxAttempts - (otpRecord.Attempts + 1)
+	return false, "Invalid security code. " + strconv.Itoa(remainingAttempts) + " attempts remaining."
 }
