@@ -9,6 +9,7 @@ import (
 )
 
 func StoreOTP(User_Id uint, otpNumber string, expTime time.Time) error {
+	log.Printf("Store OTP for %d and code %s", User_Id, otpNumber)
 	otp := models.OTP{
 		UserID:      User_Id,
 		Code:        otpNumber,
@@ -47,7 +48,7 @@ func VerifyOTP(userId uint, code string) (bool, string) {
 	// 3. Now check if the entered code is CORRECT
 	if otpRecord.Code == code {
 		// 3. Check if OTP is expired
-		log.Println(" otpRecord.Code == code ")
+		log.Println(" otpRecord.Code == code ", otpRecord.Code, "Code ", code)
 		if time.Now().After(otpRecord.ExpiresAt) {
 			return false, "OTP has expired. Please request a new one."
 		}
