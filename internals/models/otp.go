@@ -19,3 +19,9 @@ type VerifyOTPInput struct {
 	UserId uint   `json:"user_id" `
 	Code   string `json:"code"`
 }
+type ResetPasswordInput struct {
+	Emails string `json:"email"`
+}
+type UserEmailVerify struct {
+	OtpNumber string `json:"code"`
+}
